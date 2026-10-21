@@ -67,9 +67,22 @@ namespace FishbowlInventory.Models
         /// <summary>
         /// Timestamp of when the order was last modified and the user that made the modifications.
         /// </summary>
-        [JsonPropertyName("lastModified")]  //'yyyy-MM-dd'
-        [JsonConverter(typeof(DateOnlyConverter))]
-        public DateTime? LastModified { get; set; }
+        //~~~~~ ThisAndThat Changed ~~~~~ changed to class
+        [JsonPropertyName("lastModified")]
+        public LastModified_internal LastModifiedEvent { get; set; }
+
+        
+        [JsonIgnore]
+        public DateTime? LastModified //~~~~~ ThisAndThat Changed ~~~~~ added so anything that references will not change
+        //ideally it would be called DateLastModified
+        {
+            get { return LastModifiedEvent?.DateLastModified; }
+            set
+            {
+                LastModifiedEvent ??= new LastModified_internal(); //(copilot explination) LastModifiedEvent ??= new LastModified_internal(); means: if LastModifiedEvent is null, create a new LastModified_internal object. If it already has a value, leave it unchanged. Here it prevents the next line, LastModifiedEvent.DateLastModified = value;, from throwing a NullReferenceException. It’s a defensive check in case the property was set to null, such as when the JSON contains "lastModified": null.
+                LastModifiedEvent.DateLastModified = value;
+            }
+        }
 
         /// <summary>
         /// Timestamp of when the order was issued.
@@ -121,5 +134,27 @@ namespace FishbowlInventory.Models
         /// </summary>
         [JsonPropertyName("customFields")]
         public List<CustomField> CustomFields { get; set; }
+    }
+
+    //~~~~~ ThisAndThat Changed ~~~~~ added as LastModified has subitems
+    public class LastModified_internal
+    {
+        public LastModified_internal(LastModified_internal x)
+        {
+            DateLastModified = x.DateLastModified;
+            Username = x.Username;
+        }
+        public LastModified_internal()
+        {
+            DateLastModified = null;
+            Username = "";
+        }
+
+        [JsonPropertyName("dateLastModified")]  //'yyyy-MM-dd'
+        [JsonConverter(typeof(DateOnlyConverter))]
+        public DateTime? DateLastModified { get; set; }
+
+        [JsonPropertyName("username")]
+        public string Username { get; set; }
     }
 }
