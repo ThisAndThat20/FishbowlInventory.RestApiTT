@@ -1,4 +1,4 @@
-﻿using FishbowlInventory.Converters; //~~~~~ ThisAndThat Changed ~~~~~
+﻿using FishbowlInventory.Converters; //~~~~~ added
 using FishbowlInventory.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -96,7 +96,7 @@ namespace FishbowlInventory.Models
         /// 'Finished Good' | 'Raw Good' | 'Repair Raw Good' | 'Note' | 'Bill of Materials'
         /// </remarks>
         [JsonPropertyName("type")]
-        [JsonConverter(typeof(EnumStringConverter<ConfigurationItemType>))] //~~~~~ ThisAndThat Changed ~~~~~ added
+        [JsonConverter(typeof(EnumStringConverter<ConfigurationItemType>))] //~~~~~ added
         public ConfigurationItemType Type { get; set; }
 
         /// <summary>
